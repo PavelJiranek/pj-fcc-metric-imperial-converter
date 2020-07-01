@@ -1,12 +1,11 @@
 {
-	"//1": "describes your app and its dependencies",
-	"//2": "https://docs.npmjs.com/files/package.json",
-	"//3": "updating this file will download and update your packages",
-	"name": "my-hyperdev-app",
+	"name": "pj-metric-imperial-converter",
 	"version": "0.0.1",
-	"description": "What am I about?",
+	"description": "A converter of metric and imperial units - a freeCodeCampProject",
+	"author": "Pavel Jiranek",
 	"main": "server.js",
 	"scripts": {
+		"install": "yarn install",
 		"start": "node server.js"
 	},
 	"dependencies": {
@@ -20,17 +19,16 @@
 		"zombie": "^5.0.5",
 		"helmet": "^3.1.0"
 	},
-	"engines": {
-		"node": "4.4.3"
-	},
 	"repository": {
 		"type": "git",
-		"url": "https://hyperdev.com/#!/project/welcome-project"
+		"url": "https://github.com/PavelJiranek/pj-fcc-metric-imperial-converter"
 	},
 	"keywords": [
 		"node",
 		"hyperdev",
-		"express"
+		"express",
+		"units",
+		"converter"
 	],
 	"license": "MIT"
 }
