@@ -5,13 +5,16 @@
 	"author": "Pavel Jiranek",
 	"main": "server.js",
 	"scripts": {
-		"install": "yarn install",
-		"start": "node server.js"
+		"yarn-install": "yarn install",
+		"start": "node server.js",
+		"test": "cross-env NODE_ENV=test PORT=4000 node server.js"
 	},
 	"dependencies": {
 		"express": "^4.14.0",
 		"cors": "^2.8.1",
 		"body-parser": "^1.15.2",
+		"cross-env": "^7.0.2",
+		"dotenv": "^8.2.0",
 		"chai": "^3.5.0",
 		"mongodb": "^2.2.16",
 		"chai-http": "^3.0.0",
