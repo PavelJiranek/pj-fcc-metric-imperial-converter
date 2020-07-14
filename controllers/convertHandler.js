@@ -1,3 +1,4 @@
+"use strict";
 /*
 *
 *
@@ -6,18 +7,22 @@
 *       
 */
 const R = require('ramda');
+const RA = require('ramda-adjunct');
 
 const fractionMatcher = /\d+\/\d+/;
-const multipleFractionMatcher = /\d+(\/\d+){2,}/;
+const denominatorMatcher = /\/\d+/g;
 const decimalMatcher = /\d+\.\d+/;
 const numInputMatcher = /^\d+(\/\d+|\.?\d+\/\d+|\.\d+)?/; // matches num with optional decimal and/or fraction
 const DEFAULT_NUM_INPUT = '1'; // 1 is default value when no num is provided
-const INVALID_NUMBER = 'invalid number';
 
 const hasFraction = R.test(fractionMatcher);
-const hasInvalidFraction = R.test(multipleFractionMatcher);
+const hasInvalidFraction = R.pipe(
+    R.match(denominatorMatcher),
+    RA.lengthGte(2),
+);
+const roundToFixed5 = num => Number(num.toFixed(5));
 const getFraction = R.match(fractionMatcher);
-const getFractionValue = R.pipe(getFraction, R.head, eval);
+const getFractionValue = R.pipe(getFraction, R.head, eval, roundToFixed5);
 const isDecimal = R.test(decimalMatcher);
 
 const VALID_UNITS = ['gal', 'l', 'mi', 'km', 'lbs', 'kg', 'GAL', 'L', 'MI', 'KM', 'LBS', 'KG'];
@@ -47,16 +52,20 @@ const UNITS = {
   KG: 'kg',
 };
 const unitMatcher = /[a-zA-Z]+/;
-const INVALID_UNIT = 'invalid unit';
 
 const GAL_TO_L = 3.78541;
 const LBS_TO_KG = 0.453592;
 const MI_TO_KM = 1.60934;
 
-function ConvertHandler() {
-  this.getNum = function (input) {
+class ConvertHandler {
+  constructor() {
+    this.INVALID_NUMBER = 'invalid number';
+    this.INVALID_UNIT = 'invalid unit';
+  }
+
+  getNum = function (input) {
     if (hasInvalidFraction(input)) {
-      return INVALID_NUMBER;
+      return this.INVALID_NUMBER;
     }
     const [numInput] = input.match(numInputMatcher) || [DEFAULT_NUM_INPUT];
 
@@ -72,50 +81,58 @@ function ConvertHandler() {
   }
 
 
-  this.getUnit = function (input) {
-    const [unit] = input.match(unitMatcher);
+  getUnit = function (input) {
+    const [unit] = input.match(unitMatcher) || [''];
 
-    return VALID_UNITS.includes(unit) ? unit : INVALID_UNIT;
+    return VALID_UNITS.includes(unit) ? unit : this.INVALID_UNIT;
   };
 
-  this.getReturnUnit = function (initUnit) {
+  getReturnUnit = function (initUnit) {
     const normalizedUnit = initUnit.toLowerCase();
 
     return UNITS_CONVERSION_MAP[normalizedUnit];
   };
 
-  this.spellOutUnit = function (unit) {
+  spellOutUnit = function (unit) {
     const normalizedUnit = unit.toLowerCase();
 
     return UNITS_FULLNAME_MAP[normalizedUnit];
   };
 
-  this.convert = function (initNum, initUnit) {
+  convert = function (initNum, initUnit) {
     const normalizedUnit = initUnit.toLowerCase();
+    let result;
 
     switch (normalizedUnit) {
       case UNITS.GAL: {
-        return initNum * GAL_TO_L;
+        result = initNum * GAL_TO_L;
+        break;
       }
       case UNITS.L: {
-        return initNum / GAL_TO_L;
+        result = initNum / GAL_TO_L;
+        break;
       }
       case UNITS.MI: {
-        return initNum * MI_TO_KM;
+        result = initNum * MI_TO_KM;
+        break;
       }
       case UNITS.KM: {
-        return initNum / MI_TO_KM;
+        result = initNum / MI_TO_KM;
+        break;
       }
       case UNITS.LBS: {
-        return initNum * LBS_TO_KG;
+        result = initNum * LBS_TO_KG;
+        break;
       }
       case UNITS.KG: {
-        return initNum / LBS_TO_KG;
+        result = initNum / LBS_TO_KG;
+        break;
       }
     }
+    return roundToFixed5(result);
   };
 
-  this.getString = function (initNum, initUnit, returnNum, returnUnit) {
+  getString = function (initNum, initUnit, returnNum, returnUnit) {
     return `${initNum} ${this.spellOutUnit(initUnit)} converts to ${returnNum} ${this.spellOutUnit(returnUnit)}`;
   };
 

@@ -6,8 +6,8 @@
 	"main": "server.js",
 	"scripts": {
 		"yarn-install": "yarn install",
-		"start": "node server.js",
-		"test": "cross-env NODE_ENV=test PORT=4000 node server.js"
+		"start": "cross-env PORT=4000 node server.js",
+		"test": "cross-env NODE_ENV=test PORT=6000 node server.js"
 	},
 	"dependencies": {
 		"express": "^4.14.0",
@@ -20,6 +20,7 @@
 		"chai-http": "^3.0.0",
 		"mocha": "^3.2.0",
 		"ramda": "^0.27.0",
+		"ramda-adjunct": "^2.27.0",
 		"zombie": "^5.0.5",
 		"helmet": "^3.1.0"
 	},
