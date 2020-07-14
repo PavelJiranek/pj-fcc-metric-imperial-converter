@@ -20,6 +20,27 @@ const getFraction = R.match(fractionMatcher);
 const getFractionValue = R.pipe(getFraction, R.head, eval);
 const isDecimal = R.test(decimalMatcher);
 
+const VALID_UNITS = ['gal', 'l', 'mi', 'km', 'lbs', 'kg', 'GAL', 'L', 'MI', 'KM', 'LBS', 'KG'];
+const UNITS_CONVERSION_MAP = {
+  'gal': 'l',
+  'l': 'gal',
+  'mi': 'km',
+  'km': 'mi',
+  'lbs': 'kg',
+  'kg': 'lbs',
+}
+
+const UNITS_FULLNAME_MAP = {
+  'gal': 'gallons',
+  'l': 'litres',
+  'mi': 'miles',
+  'km': 'kilometers',
+  'lbs': 'pounds',
+  'kg': 'kilograms',
+}
+const unitMatcher = /[a-zA-Z]+/;
+const INVALID_UNIT = 'invalid unit';
+
 function ConvertHandler() {
   this.getNum = function (input) {
     if (hasInvalidFraction(input)) {
@@ -40,21 +61,21 @@ function ConvertHandler() {
 
 
   this.getUnit = function (input) {
-    let result;
+    const [unit] = input.match(unitMatcher);
 
-    return result;
+    return VALID_UNITS.includes(unit) ? unit : INVALID_UNIT;
   };
 
   this.getReturnUnit = function (initUnit) {
-    let result;
+    const normalizedUnit = initUnit.toLowerCase();
 
-    return result;
+    return UNITS_CONVERSION_MAP[normalizedUnit];
   };
 
   this.spellOutUnit = function (unit) {
-    let result;
+    const normalizedUnit = unit.toLowerCase();
 
-    return result;
+    return UNITS_FULLNAME_MAP[normalizedUnit];
   };
 
   this.convert = function (initNum, initUnit) {
