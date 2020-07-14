@@ -90,7 +90,7 @@ suite('Unit Tests', function () {
     
     test('For Each Valid Unit Inputs', function(done) {
       const input = ['gal', 'l', 'mi', 'km', 'lbs', 'kg'];
-      const expect = ['gallons', 'litres', 'miles', 'kilometers', 'pounds', 'kilograms'];
+      const expect = ['gallons', 'liters', 'miles', 'kilometers', 'pounds', 'kilograms'];
       input.forEach(function (ele, i) {
         assert.equal(convertHandler.spellOutUnit(ele), expect[i]);
       });
@@ -107,32 +107,58 @@ suite('Unit Tests', function () {
       assert.approximately(convertHandler.convert(input[0], input[1]), expected, 0.1); //0.1 tolerance
       done();
     });
-    
-    test('L to Gal', function(done) {
-      
-      //done();
+
+    test('L to Gal', function (done) {
+      const input = [5, 'L'];
+      const expected = 1.32086;
+      assert.approximately(convertHandler.convert(input[0], input[1]), expected, 0.1); //0.1 tolerance
+      done();
     });
-    
-    test('Mi to Km', function(done) {
-      
-      //done();
+
+    test('Mi to Km', function (done) {
+      const input = [5, 'mi'];
+      const expected = 8.04672;
+      assert.approximately(convertHandler.convert(input[0], input[1]), expected, 0.1); //0.1 tolerance
+      done();
     });
-    
-    test('Km to Mi', function(done) {
-      
-      //done();
+
+    test('Km to Mi', function (done) {
+      const input = [5, 'km'];
+      const expected = 3.10686;
+      assert.approximately(convertHandler.convert(input[0], input[1]), expected, 0.1); //0.1 tolerance
+      done();
     });
-    
-    test('Lbs to Kg', function(done) {
-      
-      //done();
+
+    test('Lbs to Kg', function (done) {
+      const input = [5, 'lbs'];
+      const expected = 2.26796;
+      assert.approximately(convertHandler.convert(input[0], input[1]), expected, 0.1); //0.1 tolerance
+      done();
     });
-    
-    test('Kg to Lbs', function(done) {
-      
-      //done();
+
+    test('Kg to Lbs', function (done) {
+      const input = [5, 'kg'];
+      const expected = 11.023104116588;
+      assert.approximately(convertHandler.convert(input[0], input[1]), expected, 0.1); //0.1 tolerance
+      done();
     });
-    
+
+  });
+
+  suite('Function convertHandler.getString(initNum, initUnit, returnNum, returnUnit)', function () {
+
+    test('Get correct string', function (done) {
+      const expected = '3.1 miles converts to 5.00002 kilometers';
+      assert.strictEqual(
+          convertHandler.getString(
+              3.1,
+              'mi',
+              5.00002,
+              'km',
+          ), expected);
+      done();
+    });
+
   });
 
 });
